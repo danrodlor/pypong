@@ -3,11 +3,11 @@
  
  The intention of this project is to familiarize myself with Pygame and some of the structures and techniques used in gamedev. Therefore, I plan to add some experimental from features time to time!
 
- # Screenshots
+ ## Screenshots
  ![New Game](resources/images/new_game_screenshot.png)
 
- # Mentions
- All the sounds** used in this game have been downloaded from freesound:
+ ## Mentions
+ All the sounds used in this game have been downloaded from freesound:
  * __Clank from two clay pots.wav__ by [Ironlink15](https://freesound.org/people/Ironlink15/)
  * __beep4.wav__ by [thisusernameis](https://freesound.org/people/thisusernameis/)
  * __Coins 1__ by [ProjectsU012](https://freesound.org/people/ProjectsU012/)
