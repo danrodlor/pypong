@@ -10,7 +10,7 @@
  All the sounds** used in this game have been downloaded from freesound:
  * __Clank from two clay pots.wav__ by [Ironlink15](https://freesound.org/people/Ironlink15/)
  * __beep4.wav__ by [thisusernameis](https://freesound.org/people/thisusernameis/)
- * __Coins 1__ by [ProjectsU012](Coins 1 by ProjectsU012)
+ * __Coins 1__ by [ProjectsU012](https://freesound.org/people/ProjectsU012/)
  * __Goal Point Reached Simple SFX__ by [Free-Rush](https://freesound.org/people/Free-Rush/)
  * __Collect_Point_00.wav__ by [LittleRobotSoundFactory](https://freesound.org/people/LittleRobotSoundFactory/)
  * __Tennis smash__ by [gprosser](https://freesound.org/people/gprosser/)
