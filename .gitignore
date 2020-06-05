@@ -1,0 +1,5 @@
+# Ignore Python generated cache
+__pycache__/
+
+# Ignore the savefiles
+storage/*
