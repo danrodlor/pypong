@@ -16,4 +16,4 @@
  * __Tennis smash__ by [gprosser](https://freesound.org/people/gprosser/)
  * __backhand_close.wav__ by [singintime](https://freesound.org/people/singintime/)
  * __guiclick.ogg__ by [farpro](https://freesound.org/people/farpro/)
- * __Button_Hover (ogg).ogg__ by [deadsillyrabbit](Button_Hover (ogg).ogg by deadsillyrabbit)
+ * __Button_Hover (ogg).ogg__ by [deadsillyrabbit](https://freesound.org/people/deadsillyrabbit/)
