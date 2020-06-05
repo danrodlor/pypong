@@ -1,7 +1,7 @@
 # Pypong
- A simple Pong clone made with Pygame! 
+ A simple Pong clone made with [Pygame](https://www.pygame.org/news)! 
  
- The intention of this project is to familiarize myself with Pygame and some of the structures and techniques used in gamedev. Therefore, I plan to add some experimental from features time to time!
+ The intention of this project is to familiarize myself with Pygame and some of the structures and techniques used in gamedev. Therefore, I plan to add some experimental features from time to time!
 
  ## Screenshots
  ![New Game](resources/images/new_game_screenshot.png)
