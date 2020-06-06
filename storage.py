@@ -8,6 +8,7 @@ from widgets import SimpleButton
 # TODO:
 #       - Should be StorageSlot a widget (inheritance) or should it be composed by a widget?
 #       ---->THEORY SAYS COMPOSITION OVER INHERITANCE...
+#       - May be this can be just a couple of functions create_folder/check_files/save/load
 #       - file and screenshot filenames can be removed, duplicated info ----> Check this out
 
 class StorageSlot(SimpleButton):
@@ -20,7 +21,12 @@ class StorageSlot(SimpleButton):
         self._filename = None
         self._screenshot_file = None
         self._screenshot_filename = None
+        self._create_storage_folder()
         self._check_saved_files()
+
+    def _create_storage_folder(self):
+        if not os.path.isdir(config.STORAGE_BASE_PATH):
+            os.mkdir(config.STORAGE_BASE_PATH)
 
     def _check_saved_files(self):
         slot_file_data = "_".join(["slot", self._id, "data"])
@@ -74,7 +80,6 @@ class StorageSlot(SimpleButton):
             json.dump(storage_data, savefile, indent=4)
 
     def load_game(self):
-
         with open(self._file, 'r') as loadfile:
             storage_data = json.load(loadfile)
         self.textbox.modify(newtext="Loaded")
