@@ -4,9 +4,11 @@
  The intention of this project is to familiarize myself with Pygame and some of the structures and techniques used in gamedev. Therefore, I plan to add some experimental features from time to time!
 
  ## Screenshots
- ![Main Menu](resources/screenshots/main_menu_screenshot.png?raw=true)
+ ![Main Menu](resources/screenshots/main_menu_screenshot.PNG?raw=true)
+
  ![New Game](resources/images/new_game_screenshot.png?raw=true)
- ![Save Menu](resources/screenshots/save_menu_screenshot.png?raw=true)
+
+ ![Save Menu](resources/screenshots/save_menu_screenshot.PNG?raw=true)
 
  ## Mentions
  All the sounds used in this game have been downloaded from freesound:
