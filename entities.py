@@ -1,10 +1,10 @@
+import config
 import random
 import pygame
+from math import sin
 from pygame.locals import *
 
 # TODO:
-# - direction string variables can be avoided using xspeed and yspeed with positive and negative values, so that no check is needed
-# - add angles to ball bounce
 # - redesign the controller interface..., add a function to get the action: MB the class has to implement Controllable abstract class
 
 class Ball(pygame.sprite.Sprite):
@@ -16,12 +16,12 @@ class Ball(pygame.sprite.Sprite):
         self.image.fill(pygame.Color('white'))
         self.rect = self.image.get_rect(center=(x, y))
         self.initial_speed = speed
-        self.xspeed = speed
-        self.yspeed = speed
+        self.xspeed = random.choice([speed, -speed])
+        self.yspeed = random.choice([speed, -speed])
         self.board = board
         self.board_rect = self.board.get_rect()
-        self.xdirection = random.choice(['rigth', 'left'])
-        self.ydirection = random.choice(['up', 'down'])
+        self.fx = float(self.rect.x)
+        self.fy = float(self.rect.y)
         self.bounce_sound = bounce_sound
         self.hit_sound = hit_sound
 
@@ -42,48 +42,40 @@ class Ball(pygame.sprite.Sprite):
         self.rect.y = y
 
     def _check_board_boundaries(self):
-        if self.y >= self.board_rect.height - self.size:
-            self.ydirection = 'up'
-            self.bounce_sound.play()
-        elif self.y <= 0:
-            self.ydirection = 'down'
+        if self.fy >= (self.board_rect.height - self.size) or self.fy <= 0:
+            self.yspeed = -self.yspeed
             self.bounce_sound.play()
 
     def reset(self):
         self.rect.center = self.board_rect.center
-        self.xdirection = random.choice(['rigth', 'left'])
-        self.ydirection = random.choice(['up', 'down'])
-        self.xspeed = self.initial_speed
-        self.yspeed = self.initial_speed
+        self.fx = self.rect.x
+        self.fy = self.rect.y
+        self.xspeed = random.choice([self.initial_speed, -self.initial_speed])
+        self.yspeed = random.choice([self.initial_speed, -self.initial_speed])
 
     def process_collision(self, entity):
         if (self.rect.right >= entity.rect.left) or (self.rect.left <= entity.rect.right):
-            # FIXME: Complete this to bounce with angle depending on where they collide
-            #bounce_angle = (entity.rect.centery - self.rect.centery)/entity.height
-            if self.xdirection == 'rigth':
-                self.xdirection = 'left'
-                self.rect.right = entity.rect.left - self.xspeed
-            elif self.xdirection == 'left':
-                self.xdirection = 'rigth'
-                self.rect.left = entity.rect.right + self.xspeed
 
-            self.xspeed += 0.5
-            self.yspeed += 0.5
+            if self.xspeed < 0:
+                self.fx = entity.rect.right
+            else:
+                self.fx = entity.rect.left - self.size
+
+            offset = (entity.rect.centery - self.rect.centery)
+            normalized_offset = offset / (0.5 * (entity.height + self.size))
+            bounce_angle = config.MAX_BOUNCING_ANGLE * normalized_offset
+
+            self.xspeed = -self.xspeed
+            self.yspeed = self.initial_speed * -sin(bounce_angle)
 
             self.hit_sound.play()
 
     def update(self):
         self._check_board_boundaries()
-
-        if self.xdirection == 'left':
-            self.x -= self.xspeed
-        elif self.xdirection == 'rigth':
-            self.x += self.xspeed
-
-        if self.ydirection == 'down':
-            self.y += self.yspeed
-        elif self.ydirection == 'up':
-            self.y -= self.yspeed
+        self.fx += self.xspeed
+        self.fy += self.yspeed
+        self.x = round(self.fx)
+        self.y = round(self.fy)
 
     def draw(self):
         self.board.blit(self.image, self.rect)
