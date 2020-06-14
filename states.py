@@ -355,12 +355,10 @@ class GameRunningState(State):
             'enemy_x': self.enemy.x,
             'enemy_y': self.enemy.y,
             'enemy_score': self.enemy_score,
-            'ball_x': self.ball.x,
-            'ball_y': self.ball.y,
+            'ball_fx': self.ball.fx,
+            'ball_fy': self.ball.fy,
             'ball_xspeed': self.ball.xspeed,
             'ball_yspeed': self.ball.yspeed,
-            'ball_xdirection': self.ball.xdirection,
-            'ball_ydirection': self.ball.ydirection
         }
         )
 
@@ -371,12 +369,10 @@ class GameRunningState(State):
         self.enemy.x = self.SHARED_DATA['GAME_DATA']['enemy_x']
         self.enemy.y = self.SHARED_DATA['GAME_DATA']['enemy_y']
         self.enemy_score = self.SHARED_DATA['GAME_DATA']['enemy_score']
-        self.ball.x = self.SHARED_DATA['GAME_DATA']['ball_x']
-        self.ball.y = self.SHARED_DATA['GAME_DATA']['ball_y']
+        self.ball.fx = self.SHARED_DATA['GAME_DATA']['ball_fx']
+        self.ball.fy = self.SHARED_DATA['GAME_DATA']['ball_fy']
         self.ball.xspeed = self.SHARED_DATA['GAME_DATA']['ball_xspeed']
         self.ball.yspeed = self.SHARED_DATA['GAME_DATA']['ball_yspeed']
-        self.ball.xdirection = self.SHARED_DATA['GAME_DATA']['ball_xdirection']
-        self.ball.ydirection = self.SHARED_DATA['GAME_DATA']['ball_ydirection']
 
         self.player_score_textbox.modify(newtext=str(self.player_score))
         self.enemy_score_textbox.modify(newtext=str(self.enemy_score))
@@ -399,12 +395,12 @@ class GameRunningState(State):
             self.ball.process_collision(entity)
 
     def _execute_game_logic(self):
-        if self.ball.rect.left < self.player.rect.centerx:
+        if self.ball.rect.left < self.player.rect.left:
             self.enemy_score += 1
             self.enemy_score_textbox.modify(newtext=str(self.enemy_score))
             self.score_point_sound.play()
             self.ball.reset()
-        elif self.ball.rect.right > self.enemy.rect.centerx:
+        elif self.ball.rect.right > self.enemy.rect.right:
             self.player_score += 1
             self.player_score_textbox.modify(newtext=str(self.player_score))
             self.score_point_sound.play()
