@@ -18,6 +18,7 @@ class Ball(pygame.sprite.Sprite):
         self.initial_speed = speed
         self.xspeed = random.choice([speed, -speed])
         self.yspeed = random.choice([speed, -speed])
+        self.speed_coeff = 1.0
         self.board = board
         self.board_rect = self.board.get_rect()
         self.fx = float(self.rect.x)
@@ -52,6 +53,7 @@ class Ball(pygame.sprite.Sprite):
         self.fy = self.rect.y
         self.xspeed = random.choice([self.initial_speed, -self.initial_speed])
         self.yspeed = random.choice([self.initial_speed, -self.initial_speed])
+        self.speed_coeff = 1.0
 
     def process_collision(self, entity):
         if (self.rect.right >= entity.rect.left) or (self.rect.left <= entity.rect.right):
@@ -68,12 +70,19 @@ class Ball(pygame.sprite.Sprite):
             self.xspeed = -self.xspeed
             self.yspeed = self.initial_speed * -sin(bounce_angle)
 
+            if abs(bounce_angle) <= (config.MAX_BOUNCING_ANGLE / 6):
+                self.speed_coeff += 0.10
+            else:
+                self.speed_coeff += 0.05
+
+            print("angle: {} - speed_coeff: {} - limit: {}".format(abs(bounce_angle), self.speed_coeff, (config.MAX_BOUNCING_ANGLE / 6)))
+
             self.hit_sound.play()
 
     def update(self):
         self._check_board_boundaries()
-        self.fx += self.xspeed
-        self.fy += self.yspeed
+        self.fx += (self.speed_coeff * self.xspeed)
+        self.fy += (self.speed_coeff * self.yspeed)
         self.x = round(self.fx)
         self.y = round(self.fy)
 
