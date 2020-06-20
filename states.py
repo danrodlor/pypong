@@ -359,6 +359,7 @@ class GameRunningState(State):
             'ball_fy': self.ball.fy,
             'ball_xspeed': self.ball.xspeed,
             'ball_yspeed': self.ball.yspeed,
+            'ball_speed_coeff': self.ball.speed_coeff,
         }
         )
 
@@ -373,6 +374,7 @@ class GameRunningState(State):
         self.ball.fy = self.SHARED_DATA['GAME_DATA']['ball_fy']
         self.ball.xspeed = self.SHARED_DATA['GAME_DATA']['ball_xspeed']
         self.ball.yspeed = self.SHARED_DATA['GAME_DATA']['ball_yspeed']
+        self.ball.speed_coeff = self.SHARED_DATA['GAME_DATA']['ball_speed_coeff']
 
         self.player_score_textbox.modify(newtext=str(self.player_score))
         self.enemy_score_textbox.modify(newtext=str(self.enemy_score))
