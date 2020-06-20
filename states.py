@@ -264,13 +264,11 @@ class GameCountdownState(State):
 
     def _set_pause_background(self):
         if not self.is_bg_set:
-            try:
-                paused_game_img_string = config.PAUSED_GAME_IMG_STRING
-            except KeyError:
-                paused_game_img_string = None
-
-            if paused_game_img_string:
-                self.background = pygame.image.fromstring(paused_game_img_string, (config.SCREEN_WIDTH, config.SCREEN_HEIGHT), 'RGB')
+            if config.PAUSED_GAME_IMG_STRING:
+                self.background = pygame.image.fromstring(config.PAUSED_GAME_IMG_STRING,
+                                                          (config.SCREEN_WIDTH,
+                                                           config.SCREEN_HEIGHT),
+                                                          'RGB')
             else:
                 self.background = self.new_game_img
             self.background.set_alpha(100)
@@ -345,6 +343,8 @@ class GameRunningState(State):
         self.enemy_score = 0
         self.player_score_textbox.modify(newtext=str(self.player_score))
         self.enemy_score_textbox.modify(newtext=str(self.enemy_score))
+
+        config.PAUSED_GAME_IMG_STRING = None
 
     def _update_game_data(self):
         self.SHARED_DATA['GAME_DATA'].update(
