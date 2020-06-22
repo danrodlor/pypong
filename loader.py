@@ -9,6 +9,27 @@ class EmptySound():
     def play(self):
         pass
 
+class MuteableSound():
+
+    SOUNDS_MUTED = False
+
+    def __init__(self, filepath):
+        self.sound = pygame.mixer.Sound(filepath)
+
+    def play(self):
+        if self.SOUNDS_MUTED:
+            pass
+        else:
+            self.sound.play()
+
+    @classmethod
+    def mute_all(cls):
+        cls.SOUNDS_MUTED = True
+
+    @classmethod
+    def unmute_all(cls):
+        cls.SOUNDS_MUTED = False
+
 class ResourceLoader():
 
     RESOURCES = ('images', 'sounds')
@@ -31,7 +52,7 @@ class ResourceLoader():
                     if resource_type == 'images' and file.endswith(self.ACCEPTED_IMAGE_EXTENSIONS):
                         self._cache[resource_type][resource_name] = pygame.image.load(filepath).convert()
                     elif resource_type == 'sounds' and file.endswith(self.ACCEPTED_SOUND_EXTENSIONS):
-                        self._cache[resource_type][resource_name] = pygame.mixer.Sound(filepath)
+                        self._cache[resource_type][resource_name] = MuteableSound(filepath)
 
             self.add_sound(None, EmptySound())
 
