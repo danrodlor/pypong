@@ -1,4 +1,5 @@
 import os
+from math import pi
 from pathlib import Path
 
 # Paths
@@ -20,3 +21,4 @@ FPS = 60
 BRICK_SIZE = 25
 PLAYER_SPEED = 3
 ENEMY_SPEED = 3
+MAX_BOUNCING_ANGLE = (5 * pi / 12) # = 75 degrees

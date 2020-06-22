@@ -5,6 +5,7 @@ from input import InputController, AIController
 from entities import Paddle, Ball
 from widgets import SimpleTextBox, SimpleButton
 from storage import StorageSlot
+from loader import MuteableSound
 
 # TODO:
 # 4) Decouple game variables (screen, clock...) from GameStateManager, maybe a Game class?
@@ -80,7 +81,7 @@ class GameStateManager():
             pygame.display.update()
 
 class State():
-    SHARED_DATA = {'GAME_DATA': {}, 'GAME_CONTROL': { 'data_loaded': False}}
+    SHARED_DATA = {'GAME_DATA': {}, 'GAME_CONTROL': {'data_loaded': False}}
     def __init__(self):
         self.next_state = None
         self.is_done = False
@@ -164,10 +165,10 @@ class GameOptionsMenuState(State):
         self.has_sound = not self.has_sound
         if self.has_sound:
             self.sound_button.textbox.modify(newtext='Sound: On')
-            pygame.mixer.unpause()
+            MuteableSound.unmute_all()
         else:
             self.sound_button.textbox.modify(newtext='Sound: Off')
-            pygame.mixer.pause()
+            MuteableSound.mute_all()
 
     def get_event(self, event):
         if event.type == pygame.QUIT:
@@ -264,13 +265,11 @@ class GameCountdownState(State):
 
     def _set_pause_background(self):
         if not self.is_bg_set:
-            try:
-                paused_game_img_string = config.PAUSED_GAME_IMG_STRING
-            except KeyError:
-                paused_game_img_string = None
-
-            if paused_game_img_string:
-                self.background = pygame.image.fromstring(paused_game_img_string, (config.SCREEN_WIDTH, config.SCREEN_HEIGHT), 'RGB')
+            if config.PAUSED_GAME_IMG_STRING:
+                self.background = pygame.image.fromstring(config.PAUSED_GAME_IMG_STRING,
+                                                          (config.SCREEN_WIDTH,
+                                                           config.SCREEN_HEIGHT),
+                                                          'RGB')
             else:
                 self.background = self.new_game_img
             self.background.set_alpha(100)
@@ -346,6 +345,8 @@ class GameRunningState(State):
         self.player_score_textbox.modify(newtext=str(self.player_score))
         self.enemy_score_textbox.modify(newtext=str(self.enemy_score))
 
+        config.PAUSED_GAME_IMG_STRING = None
+
     def _update_game_data(self):
         self.SHARED_DATA['GAME_DATA'].update(
             {
@@ -355,12 +356,11 @@ class GameRunningState(State):
             'enemy_x': self.enemy.x,
             'enemy_y': self.enemy.y,
             'enemy_score': self.enemy_score,
-            'ball_x': self.ball.x,
-            'ball_y': self.ball.y,
+            'ball_fx': self.ball.fx,
+            'ball_fy': self.ball.fy,
             'ball_xspeed': self.ball.xspeed,
             'ball_yspeed': self.ball.yspeed,
-            'ball_xdirection': self.ball.xdirection,
-            'ball_ydirection': self.ball.ydirection
+            'ball_speed_coeff': self.ball.speed_coeff,
         }
         )
 
@@ -371,12 +371,11 @@ class GameRunningState(State):
         self.enemy.x = self.SHARED_DATA['GAME_DATA']['enemy_x']
         self.enemy.y = self.SHARED_DATA['GAME_DATA']['enemy_y']
         self.enemy_score = self.SHARED_DATA['GAME_DATA']['enemy_score']
-        self.ball.x = self.SHARED_DATA['GAME_DATA']['ball_x']
-        self.ball.y = self.SHARED_DATA['GAME_DATA']['ball_y']
+        self.ball.fx = self.SHARED_DATA['GAME_DATA']['ball_fx']
+        self.ball.fy = self.SHARED_DATA['GAME_DATA']['ball_fy']
         self.ball.xspeed = self.SHARED_DATA['GAME_DATA']['ball_xspeed']
         self.ball.yspeed = self.SHARED_DATA['GAME_DATA']['ball_yspeed']
-        self.ball.xdirection = self.SHARED_DATA['GAME_DATA']['ball_xdirection']
-        self.ball.ydirection = self.SHARED_DATA['GAME_DATA']['ball_ydirection']
+        self.ball.speed_coeff = self.SHARED_DATA['GAME_DATA']['ball_speed_coeff']
 
         self.player_score_textbox.modify(newtext=str(self.player_score))
         self.enemy_score_textbox.modify(newtext=str(self.enemy_score))
@@ -399,12 +398,12 @@ class GameRunningState(State):
             self.ball.process_collision(entity)
 
     def _execute_game_logic(self):
-        if self.ball.rect.left < self.player.rect.centerx:
+        if self.ball.rect.left < self.player.rect.left:
             self.enemy_score += 1
             self.enemy_score_textbox.modify(newtext=str(self.enemy_score))
             self.score_point_sound.play()
             self.ball.reset()
-        elif self.ball.rect.right > self.enemy.rect.centerx:
+        elif self.ball.rect.right > self.enemy.rect.right:
             self.player_score += 1
             self.player_score_textbox.modify(newtext=str(self.player_score))
             self.score_point_sound.play()
