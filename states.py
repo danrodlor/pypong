@@ -5,6 +5,7 @@ from input import InputController, AIController
 from entities import Paddle, Ball
 from widgets import SimpleTextBox, SimpleButton
 from storage import StorageSlot
+from loader import MuteableSound
 
 # TODO:
 # 4) Decouple game variables (screen, clock...) from GameStateManager, maybe a Game class?
@@ -80,7 +81,7 @@ class GameStateManager():
             pygame.display.update()
 
 class State():
-    SHARED_DATA = {'GAME_DATA': {}, 'GAME_CONTROL': { 'data_loaded': False}}
+    SHARED_DATA = {'GAME_DATA': {}, 'GAME_CONTROL': {'data_loaded': False}}
     def __init__(self):
         self.next_state = None
         self.is_done = False
@@ -164,10 +165,10 @@ class GameOptionsMenuState(State):
         self.has_sound = not self.has_sound
         if self.has_sound:
             self.sound_button.textbox.modify(newtext='Sound: On')
-            pygame.mixer.unpause()
+            MuteableSound.unmute_all()
         else:
             self.sound_button.textbox.modify(newtext='Sound: Off')
-            pygame.mixer.pause()
+            MuteableSound.mute_all()
 
     def get_event(self, event):
         if event.type == pygame.QUIT:
